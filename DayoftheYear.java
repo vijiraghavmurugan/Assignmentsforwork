@@ -22,10 +22,10 @@ public class DayoftheYear {
 		String[] dateSplit = dates.split("-");
 		int dayFromDates = Integer.parseInt(dateSplit[0]);
 		int days = dayFromDates;
-		String mon = dateSplit[1];
+		String monthFromDates = dateSplit[1];
 		String yearAsString = dateSplit[2];
 		int year = Integer.parseInt(dateSplit[2]);
-		int monthAsNumber = monthCal(mon);
+		int monthAsNumber = monthCalculation(monthFromDates);
 		if (yearAsString.length() == 4 && monthAsNumber != 0 || (dayFromDates <= 29 && monthAsNumber == 2)) {
 
 			for (int i = monthAsNumber - 1; i > 0; i--) {
@@ -54,49 +54,49 @@ public class DayoftheYear {
 
 	}
 
-	public static int monthCal(String mon) {
-		int mm = 0;
-		switch (mon) {
+	public static int monthCalculation(String monthFromDates) {
+		int monthAsNumber = 0;
+		switch (monthFromDates) {
 		case "Jan":
-			mm = 1;
+			monthAsNumber = 1;
 			break;
 		case "Feb":
-			mm = 2;
+			monthAsNumber = 2;
 			break;
 		case "Mar":
-			mm = 3;
+			monthAsNumber = 3;
 			break;
 		case "Apr":
-			mm = 4;
+			monthAsNumber = 4;
 			break;
 		case "May":
-			mm = 5;
+			monthAsNumber = 5;
 			break;
 		case "Jun":
-			mm = 6;
+			monthAsNumber = 6;
 			break;
 		case "Jul":
-			mm = 7;
+			monthAsNumber = 7;
 			break;
 		case "Aug":
-			mm = 8;
+			monthAsNumber = 8;
 			break;
 		case "Sep":
-			mm = 9;
+			monthAsNumber = 9;
 			break;
 		case "Oct":
-			mm = 10;
+			monthAsNumber = 10;
 			break;
 		case "Nov":
-			mm = 11;
+			monthAsNumber = 11;
 			break;
 		case "Dec":
-			mm = 12;
+			monthAsNumber = 12;
 			break;
 		default:
 			System.out.println("Invalid date : month");
 		}
-		return mm;
+		return monthAsNumber;
 	}
 
 }

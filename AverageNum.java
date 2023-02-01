@@ -31,15 +31,14 @@ public class AverageNum {
 		System.out.println("Round off needed : Yes or No");
 		String round = scan.next();
 		scan.close();
-		float avg = average(sum, count);
+		double avg = average(sum, count);
 		System.out.println("Output without roundoff and multiple decimal places = ");
-		System.out.format("%.7f", avg);
-		System.out.println();
+		System.out.println(avg);
+		System.out.println("Average is ");
 		if (round.equalsIgnoreCase("yes")) {
-			System.out.println("Average is " + (int) avg);
+			System.out.print((int) (avg + 0.5)); // convert double to int and rounding off
 		} else if (round.equalsIgnoreCase("No")) {
-			System.out.println("Average is");
-			System.out.format("%." + deci + "f", avg);
+			System.out.format("%." + deci + "f", avg); // convert double to float and rounding off to decimal values
 		}
 
 	}
@@ -49,7 +48,7 @@ public class AverageNum {
 	}
 
 	public static boolean check(String ip, int deci) {
-		String[] ipSpl = ip.split("[.]");
+		String[] ipSpl = ip.split("\\.");
 		if (ipSpl[1].length() <= deci) {
 			return true;
 		}

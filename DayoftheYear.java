@@ -8,11 +8,11 @@ public class DayoftheYear {
 		Scanner scan = new Scanner(System.in);
 		System.out.println("Enter the date(DD-Mon-YYYY)");
 		String dates = scan.next();
-		int finRes = cal(dates);
-		if (finRes == 0) {
+		int finalResult = cal(dates);
+		if (finalResult == 0) {
 			System.out.println("Invalid date");
 		} else {
-			System.out.println(finRes);
+			System.out.println(finalResult);
 		}
 		scan.close();
 	}
@@ -20,31 +20,31 @@ public class DayoftheYear {
 	public static int cal(String dates) {
 
 		String[] dateSplit = dates.split("-");
-		int dd = Integer.parseInt(dateSplit[0]);
-		int days = dd;
+		int dayFromDates = Integer.parseInt(dateSplit[0]);
+		int days = dayFromDates;
 		String mon = dateSplit[1];
+		String yearAsString = dateSplit[2];
 		int year = Integer.parseInt(dateSplit[2]);
-		int mm = monthCal(mon);
-		if ((dateSplit[2].length() == 4) && (days < 32) && ((days <= 29) && mm == 2)
-				|| (days < 31 && (mm == 4 || mm == 6 || mm == 9 || mm == 11))) {
+		int monthAsNumber = monthCal(mon);
+		if (yearAsString.length() == 4 && monthAsNumber != 0 || (dayFromDates <= 29 && monthAsNumber == 2)) {
 
-			if (mm != 0) {
-				for (int i = mm - 1; i > 0; i--) {
-					if (i == 1 || i == 3 || i == 5 || i == 7 || i == 8 || i == 10 || i == 12) {
+			for (int i = monthAsNumber - 1; i > 0; i--) {
+				switch (i) {
+				case 1, 3, 5, 7, 8, 10, 12:
+					if (dayFromDates < 32)
 						days += 31;
-					} else if (i == 4 || i == 6 || i == 9 || i == 11) {
+					break;
+				case 4, 6, 9, 11:
+					if (dayFromDates < 31)
 						days += 30;
+				case 2:
+					if ((year % 4 == 0) && (((year % 100 == 0) && (year % 400 == 0)) || (year % 100 != 0))) {
+						days += 29;
 
-					} else if (i == 2) {
-						if ((year / 100 != 0) && (year / 4 == 0) && (year / 400 == 0)) {
-							days += 29;
-
-						} else {
-							days += 28;
-						}
+					} else {
+						days += 28;
 					}
 				}
-
 			}
 		} else {
 			days = 0;

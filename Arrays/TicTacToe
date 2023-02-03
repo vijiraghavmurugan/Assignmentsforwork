@@ -3,14 +3,11 @@ package arraysPractice;
 import java.util.Scanner;
 
 public class TicTacToe {
-	static int playerNumber = 0;
-	static int rowValue;
-	static int columnValue = 0;
 	static String winnerStatus = "";
 	static Scanner scan = new Scanner(System.in);
 
 	public static void main(String[] args) {
-		System.out.println("TicTakToe");
+		System.out.println("TicTacToe");
 		String[][] gameBoard = { { "-", "-", "-" }, { "-", "-", "-" }, { "-", "-", "-" } };
 		displayBoard(gameBoard);
 		System.out.println("Player 1");
@@ -18,10 +15,12 @@ public class TicTacToe {
 
 		while (scan.hasNextInt()) {
 			winnerStatus = callPlayer1(gameBoard);
+			displayBoard(gameBoard);
 			declareWinner(winnerStatus);
 			winnerStatus = callPlayer2(gameBoard);
+			displayBoard(gameBoard);
 			declareWinner(winnerStatus);
-			System.out.println("Player 1");
+			System.out.println("\nPlayer 1");
 			System.out.println("Enter the Row number : 0,1,2");
 		}
 	}
@@ -40,57 +39,72 @@ public class TicTacToe {
 	}
 
 	// Player 1 input method
-	private static String callPlayer1(String[][] gameBoard) {
+	private static String callPlayer1(String[][] gameBoard1) {
+		int rowValue = 0;
+		int columnValue = 0;
+		String winnerStatus = null;
 		rowValue = scan.nextInt();
 		if (rowValue < 3) {
 			System.out.println("Enter the Column number : 0,1,2");
 			columnValue = scan.nextInt();
 			if (columnValue < 3) {
-				playerNumber = 1;
+				int playerNumber = 1;
+				gameBoard1 = playerAdd(playerNumber, gameBoard1, rowValue, columnValue);
+				winnerStatus = checkWinnerForPlayer1(gameBoard1);
 			} else {
+				columnValue = 0;
 				System.out.println("Invalid column number. Please enter again");
-				columnValue = scan.nextInt();
+				System.out.println("Enter the Row number : 0,1,2");
+				callPlayer1(gameBoard1);
 			}
 		} else {
+			rowValue = 0;
 			System.out.println("Invalid row number. Please enter again");
-			rowValue = scan.nextInt();
+			System.out.println("Enter the Row number : 0,1,2");
+			callPlayer1(gameBoard1);
 		}
-		gameBoard = playerAdd(playerNumber, gameBoard, rowValue, columnValue);
-		displayBoard(gameBoard);
-		winnerStatus = checkWinnerForPlayer1(gameBoard);
+
 		return winnerStatus;
 	}
 
 	// Player 2 input method
-	private static String callPlayer2(String[][] gameBoard) {
+	private static String callPlayer2(String[][] gameBoard2) {
 
 		System.out.println("Player 2");
 		System.out.println("Enter the Row number : 0,1,2");
+		int rowValue = 0;
+		int columnValue = 0;
+		String winnerStatus = null;
 		rowValue = scan.nextInt();
 		if (rowValue < 3) {
 			System.out.println("Enter the Column number : 0,1,2");
 			columnValue = scan.nextInt();
 			if (columnValue < 3) {
-				playerNumber = 2;
+				int playerNumber = 2;
+				gameBoard2 = playerAdd(playerNumber, gameBoard2, rowValue, columnValue);
+				// displayBoard(gameBoard2);
+				winnerStatus = checkWinnerForPlayer2(gameBoard2);
 			} else {
+				columnValue = 0;
 				System.out.println("Invalid column number. Please enter again");
-				columnValue = scan.nextInt();
+				System.out.println("Enter the Row number : 0,1,2");
+				callPlayer2(gameBoard2);
 			}
 		} else {
+			rowValue = 0;
 			System.out.println("Invalid row number. Please enter again");
-			rowValue = scan.nextInt();
+			callPlayer2(gameBoard2);
 		}
-		gameBoard = playerAdd(playerNumber, gameBoard, rowValue, columnValue);
-		displayBoard(gameBoard);
-		winnerStatus = checkWinnerForPlayer2(gameBoard);
+
 		return winnerStatus;
 
 	}
 
 	// for displaying the Gameboard
-	private static void displayBoard(String[][] gameBoard) {
-		for (String[] eachRow : gameBoard) {
+	private static void displayBoard(String[][] gameBoardForDisplay) {
+		for (String[] eachRow : gameBoardForDisplay) {
 			for (String columnValues : eachRow) {
+				System.out.print(" ");
 				System.out.print(columnValues);
 				System.out.print(" ");
 			}
@@ -99,55 +113,81 @@ public class TicTacToe {
 	}
 
 	// To get the input from Player 1 or Player 2
-	private static String[][] playerAdd(int playerNumber, String[][] gameBoard, int rowValue, int columnValue) {
-		if (playerNumber == 1)
-			gameBoard[rowValue][columnValue] = "x";
-		else if (playerNumber == 2)
-			gameBoard[rowValue][columnValue] = "o";
-		return gameBoard;
+	private static String[][] playerAdd(int playerNumber, String[][] gameBoardForAdd, int rowValueForAdd,
+			int columnValueForAdd) {
+		if (playerNumber == 1) {
+			if (gameBoardForAdd[rowValueForAdd][columnValueForAdd] == "-")
+				gameBoardForAdd[rowValueForAdd][columnValueForAdd] = "x";
+			else if ((gameBoardForAdd[rowValueForAdd][columnValueForAdd] == "o")
+					|| (gameBoardForAdd[rowValueForAdd][columnValueForAdd] == "x")) {
+				rowValueForAdd = 0;
+				columnValueForAdd = 0;
+				System.out.println("Occupied place");
+				System.out.println("Enter the Row number : 0,1,2");
+				callPlayer1(gameBoardForAdd);
+			}
+		}
+
+		if (playerNumber == 2) {
+			if (gameBoardForAdd[rowValueForAdd][columnValueForAdd] == "-") {
+				gameBoardForAdd[rowValueForAdd][columnValueForAdd] = "o";
+			} else if ((gameBoardForAdd[rowValueForAdd][columnValueForAdd] == "o")
+					|| (gameBoardForAdd[rowValueForAdd][columnValueForAdd] == "x")) {
+
+				rowValueForAdd = 0;
+				columnValueForAdd = 0;
+				System.out.println("Occupied place");
+				callPlayer2(gameBoardForAdd);
+			}
+
+		}
+
+		return gameBoardForAdd;
 	}
 
 	// To check if Player 1 is the winner
-	private static String checkWinnerForPlayer1(String[][] gameBoard) {
-		if (gameBoard[0][0].equals("x")) {
-			if ((gameBoard[0][1].equals("x") && gameBoard[0][2].equals("x"))
-					|| (gameBoard[1][0].equals("x") && gameBoard[2][0].equals("x"))
-					|| (gameBoard[1][1].equals("x") && gameBoard[2][2].equals("x"))) {
+	private static String checkWinnerForPlayer1(String[][] gameBoardWin1) {
+		if (gameBoardWin1[0][0].equals("x")) {
+			if ((gameBoardWin1[0][1].equals("x") && gameBoardWin1[0][2].equals("x"))
+					|| (gameBoardWin1[1][0].equals("x") && gameBoardWin1[2][0].equals("x"))
+					|| (gameBoardWin1[1][1].equals("x") && gameBoardWin1[2][2].equals("x"))) {
 				return "x";
 			}
-		} else if ((gameBoard[1][1].equals("x")) && (gameBoard[1][2].equals("x"))) {
-			if ((gameBoard[0][1].equals("x")) || (gameBoard[1][0].equals("x"))) {
+		} else if ((gameBoardWin1[1][1].equals("x")) && (gameBoardWin1[1][2].equals("x"))) {
+			if ((gameBoardWin1[0][1].equals("x")) || (gameBoardWin1[1][0].equals("x"))) {
 				return "x";
 			}
-		} else if (gameBoard[0][2].equals("x")) {
-			if ((gameBoard[1][2].equals("x") && gameBoard[2][2].equals("x"))
-					|| (gameBoard[1][1].equals("x") && gameBoard[2][0].equals("x"))) {
+		} else if (gameBoardWin1[0][2].equals("x")) {
+			if ((gameBoardWin1[1][2].equals("x") && gameBoardWin1[2][2].equals("x"))
+					|| (gameBoardWin1[1][1].equals("x") && gameBoardWin1[2][0].equals("x"))) {
 				return "x";
 			}
-		} else if ((gameBoard[2][0].equals("x")) && (gameBoard[2][1].equals("x")) && (gameBoard[2][2].equals("x"))) {
+		} else if ((gameBoardWin1[2][0].equals("x")) && (gameBoardWin1[2][1].equals("x"))
+				&& (gameBoardWin1[2][2].equals("x"))) {
 			return "x";
 		}
 		return " ";
 	}
 
 	// To check if Player 1 is the winner
-	private static String checkWinnerForPlayer2(String[][] gameBoard) {
-		if (gameBoard[0][0].equals("o")) {
-			if ((gameBoard[0][1].equals("o") && gameBoard[0][2].equals("o"))
-					|| (gameBoard[1][0].equals("o") && gameBoard[2][0].equals("o"))
-					|| (gameBoard[1][1].equals("o") && gameBoard[2][2].equals("o"))) {
+	private static String checkWinnerForPlayer2(String[][] gameBoardWin2) {
+		if (gameBoardWin2[0][0].equals("o")) {
+			if ((gameBoardWin2[0][1].equals("o") && gameBoardWin2[0][2].equals("o"))
+					|| (gameBoardWin2[1][0].equals("o") && gameBoardWin2[2][0].equals("o"))
+					|| (gameBoardWin2[1][1].equals("o") && gameBoardWin2[2][2].equals("o"))) {
 				return "o";
 			}
-		} else if ((gameBoard[1][1].equals("o")) && (gameBoard[1][2].equals("o"))) {
-			if ((gameBoard[0][1].equals("o")) || (gameBoard[1][0].equals("o"))) {
+		} else if ((gameBoardWin2[1][1].equals("o")) && (gameBoardWin2[1][2].equals("o"))) {
+			if ((gameBoardWin2[0][1].equals("o")) || (gameBoardWin2[1][0].equals("o"))) {
 				return "o";
 			}
-		} else if (gameBoard[0][2].equals("o")) {
-			if ((gameBoard[1][2].equals("o") && gameBoard[2][2].equals("o"))
-					|| (gameBoard[1][1].equals("o") && gameBoard[2][0].equals("o"))) {
+		} else if (gameBoardWin2[0][2].equals("o")) {
+			if ((gameBoardWin2[1][2].equals("o") && gameBoardWin2[2][2].equals("o"))
+					|| (gameBoardWin2[1][1].equals("o") && gameBoardWin2[2][0].equals("o"))) {
 				return "o";
 			}
-		} else if ((gameBoard[2][0].equals("o")) && (gameBoard[2][1].equals("o")) && (gameBoard[2][2].equals("o"))) {
+		} else if ((gameBoardWin2[2][0].equals("o")) && (gameBoardWin2[2][1].equals("o"))
+				&& (gameBoardWin2[2][2].equals("o"))) {
 			return "o";
 		}
 		return " ";

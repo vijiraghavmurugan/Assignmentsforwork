@@ -1,0 +1,77 @@
+package arraysPractice;
+
+import java.util.Scanner;
+
+public class WordCount {
+
+	public static void main(String[] args) {
+		Scanner scan = new Scanner(System.in);
+
+		System.out.println("Enter the paragraph");
+		String paragraphInput = scan.nextLine();
+		scan.close();
+
+		String[] paraSplit = paragraphInput.split("(\\,\\s+)|(\\.)|(\\s+)|(\\;\\s+)|(\\!\\s+)");
+
+		int lengthOfString = paraSplit.length;
+
+		int temp = 0, rowAndColumnValue = 0;
+		
+		//to calculate the row and column value
+		while (lengthOfString > temp) {
+			++rowAndColumnValue;
+			temp = rowAndColumnValue * rowAndColumnValue;
+
+		}
+
+		String[][] paraArray = new String[rowAndColumnValue][rowAndColumnValue];
+
+		int l = 0;
+
+		for (int i = 0; i < rowAndColumnValue; i++) {
+			for (int j = 0; j < rowAndColumnValue; j++) {
+				if (l < lengthOfString)
+					paraArray[i][j] = paraSplit[l++].trim();
+
+			}
+		}
+
+		toTakeValueForComparing(rowAndColumnValue, paraArray);
+	}
+
+	// to get the value for comparing
+	private static void toTakeValueForComparing(int rowAndColumnValue, String[][] paraArray) {
+
+		int count = 0;
+
+		for (int i = 0; i < rowAndColumnValue; i++) {
+			for (int j = 0; j < rowAndColumnValue; j++) {
+				String value = paraArray[i][j];
+				// System.out.println(value + " is the value");
+				if (value != (null)) {
+					count = wordCounter(value, paraArray, rowAndColumnValue);
+					if (count != 0) {
+						System.out.println(value + " : " + count);
+					}
+				}
+			}
+		}
+	}
+
+	// to compare and count the words
+	private static int wordCounter(String value, String[][] paraArray, int rowAndColumnValue) {
+		int counter = 0;
+		for (int i = 0; i < rowAndColumnValue; i++) {
+			for (int j = 0; j < rowAndColumnValue; j++) {
+				String checkValue = paraArray[i][j];
+				// System.out.println(checkValue);
+				if (value.equalsIgnoreCase(checkValue)) {
+					counter++;
+					paraArray[i][j] = null;
+				}
+			}
+		}
+		return counter;
+	}
+
+}

@@ -1,0 +1,49 @@
+package collections;
+
+import java.util.Scanner;
+
+public class DynamicArray {
+	static Scanner scan = new Scanner(System.in);
+
+	public static void main(String[] args) {
+		int[] array = new int[0];
+		int j = 0;
+
+		System.out.println("Enter the number");
+		while (scan.hasNextInt()) {
+			array = toIncreaseSize(array);
+			array[j++] = scan.nextInt();
+			System.out.println("Do you have next number : Y or N");
+			String response = scan.next();
+			boolean responseBoolean = false;
+			if (response.equalsIgnoreCase("Y")) {
+				responseBoolean = true;
+			}
+			if (!responseBoolean) {
+				outputArray(array);
+				System.exit(0);
+			}
+			System.out.println("Enter the number");
+		}
+
+		scan.close();
+
+	}
+
+	private static void outputArray(int[] array) {
+		for (int a : array) {
+			System.out.print(a + " ");
+		}
+	}
+
+	private static int[] toIncreaseSize(int[] array) {
+		int[] arrayCopy = new int[array.length + 1];
+		for (int i = 0; i < array.length; i++) {
+			arrayCopy[i] = array[i];
+		}
+
+		array = arrayCopy;
+		return array;
+	}
+
+}

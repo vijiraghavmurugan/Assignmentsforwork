@@ -1,0 +1,40 @@
+package collections;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+public class ExtractFromArrayList {
+
+	public static void main(String[] args) {
+		Scanner scan = new Scanner(System.in);
+		List<String> list = new ArrayList<String>();
+
+		list.add("Apple");
+		list.add("Banana");
+		list.add("Kiwi");
+		list.add("Watermelon");
+		list.add("Orange");
+		list.add("Lemon");
+		list.add("Papaya");
+
+		System.out.println("Original List " + list);
+
+		System.out.println("Enter the start point of the sublist");
+		int startPoint = scan.nextInt();
+
+		System.out.println("Enter the end point of the sublist");
+		int endPoint = scan.nextInt();
+
+		scan.close();
+
+		List<String> subList = new ArrayList<String>();
+
+		for (int i = startPoint - 1; i < endPoint; i++) {
+			subList.add((list.get(i)));
+		}
+
+		System.out.println("Sublist of Fruits " + subList);
+	}
+
+}

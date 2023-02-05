@@ -1,14 +1,25 @@
 package collections;
 
+import java.util.Scanner;
+
 public class Rank {
 
 	public static void main(String[] args) {
-		int[] arrayInput = { 10, 8, 15, 12, 6, 20, 1 };
-		int[] arraySort = new int[arrayInput.length];
 
-		for (int i = 0; i < arrayInput.length; i++) {
+		Scanner input = new Scanner(System.in);
+		System.out.println("Enter the No of inputs");
+		int arrayLength = input.nextInt();
+
+		int[] arrayInput = new int[arrayLength];
+		int[] arraySort = new int[arrayLength];
+
+		System.out.println("Type the numbers and press 'Enter'");
+
+		for (int i = 0; i < arrayLength; i++) {
+			arrayInput[i] = input.nextInt();
 			arraySort[i] = arrayInput[i];
 		}
+		input.close();
 
 		System.out.println("Input array");
 		displayArray(arrayInput);
@@ -39,7 +50,7 @@ public class Rank {
 		for (int i = 0; i < arrayInput.length; i++) {
 			for (int j = 0; j < arrayInput.length; j++) {
 				if (arrayInput[i] == sortedArray[j]) {
-					arrayInput[i] = j+1;
+					arrayInput[i] = j + 1;
 				}
 			}
 		}

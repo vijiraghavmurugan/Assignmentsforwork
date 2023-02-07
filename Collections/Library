@@ -1,0 +1,248 @@
+package collections;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Scanner;
+
+public class Library {
+	static Scanner scan = new Scanner(System.in);
+
+	public static void main(String[] args) {
+
+		Map<String, ArrayList<String>> authorBook = new HashMap<String, ArrayList<String>>();
+		Map<String, ArrayList<String>> userAuthorBook = new HashMap<String, ArrayList<String>>();
+
+		System.out.println("Login as Librarian or User : Type L for Librarian or U for User");
+
+		while (scan.hasNext()) {
+			String login = scan.next(); // input for L or U
+
+			// for Librarian
+			if (login.equalsIgnoreCase("L")) {
+				System.out.println("\nWhich action do you want to perform");
+				System.out.println("Type \"Add\" for Add Books");
+				System.out.println("Type \"Delete\" for Delete books");
+
+				String addDelete = scan.next();
+
+				if (addDelete.equalsIgnoreCase("Add")) {
+					System.out.println("\nEnter the no of books to be added");
+					int countOfBooksAdd = scan.nextInt();
+					toAddBooks(countOfBooksAdd, authorBook);
+				} else if (addDelete.equalsIgnoreCase("Delete")) {
+					System.out.println("\nEnter the no of books to be deleted");
+					int countOfBooksDel = scan.nextInt();
+					toDeleteBook(countOfBooksDel, authorBook);
+				}
+			} else if (login.equalsIgnoreCase("U")) { // for User
+				System.out.println("\nWhich action do you want to perform");
+				System.out.println("Type \"Take\" to Take Books");
+				System.out.println("Type \"Return\" for Return books");
+
+				String takeReturn = scan.next();
+
+				if (takeReturn.equalsIgnoreCase("Take")) {
+					toTakeBook(authorBook, userAuthorBook);
+				} else if (takeReturn.equalsIgnoreCase("Return")) {
+					toReturnBook(authorBook, userAuthorBook);
+				} else {
+					System.out.println("\nEnter a valid input");
+				}
+			}
+			System.out.println("\nLogin as Librarian or User : Type L for Librarian or U for User");
+		}
+	}
+
+	// Add books by Librarian
+	private static void toAddBooks(int countOfBooks, Map<String, ArrayList<String>> authorBook) {
+
+		for (int i = 1; i <= countOfBooks; i++) {
+			System.out.println("\nDetail no " + i);
+			System.out.println("\nEnter the Author Name");
+			String authName = scan.next().toUpperCase();
+
+			System.out.println("\nEnter the Book Name");
+			String bookName = scan.next().toUpperCase();
+			if (!authorBook.containsKey(authName)) {// check if author name is absent
+				ArrayList<String> bookListMain = new ArrayList<String>();
+				authorBook.put(authName, bookListMain);
+				authorBook.get(authName).add(bookName);
+				System.out.println("\nBook Added");
+
+			} else if (authorBook.containsKey(authName)) {
+				authorBook.get(authName).add(bookName);
+				System.out.println("\nBook Added");
+			} else {
+				i--;
+				System.out.println("\nNot Added. Duplicate book");
+			}
+		}
+	}
+
+//Delete book by Librarian
+	private static void toDeleteBook(int countOfBooksDel, Map<String, ArrayList<String>> authorBook) {
+		if (!authorBook.isEmpty()) {
+			displayAuthorBook(authorBook);
+			for (int i = 1; i <= countOfBooksDel; i++) {
+
+				System.out.println("\nEnter the Author Name to Delete");
+				String authToDelete = scan.next().toUpperCase();
+				System.out.println("\nEnter the Book Name to Delete");
+				String bookToDelete = scan.next().toUpperCase();
+
+				if (authorBook.get(authToDelete) != null) {
+					authorBook.get(authToDelete).remove(bookToDelete);
+					System.out.println("\n" + bookToDelete + " is removed");
+				} else {
+					i--;
+					System.out.println("\nEnter a valid Author name");
+
+				}
+			}
+		} else {
+			System.out.println("\nNo entries to delete");
+		}
+	}
+
+	// Take book by User
+	private static void toTakeBook(Map<String, ArrayList<String>> authorBook,
+			Map<String, ArrayList<String>> userAuthorBook) {
+
+		String bookNameTake = null, authnameTake = null;
+		displayAuthorBook(authorBook);
+		System.out.println("\nEnter the Book Name or Author Name");
+		System.out.println("Type Book for Book Name");
+		System.out.println("Type Author for Author Name");
+
+		String toTakeInput = scan.next();
+
+		if (toTakeInput.equalsIgnoreCase("Book")) {
+			System.out.println("\nEnter the Book Name");
+			bookNameTake = scan.next().toUpperCase();
+			for (Map.Entry<String, ArrayList<String>> value : authorBook.entrySet()) {
+				String author = value.getKey();
+				for (String books : value.getValue()) {
+					if (books.equalsIgnoreCase(bookNameTake)) {
+						System.out.println(author);
+					}
+				}
+			}
+			System.out.println("\nEnter the Author name");
+			authnameTake = scan.next().toUpperCase();
+
+		} else if (toTakeInput.equalsIgnoreCase("Author")) {
+			System.out.println("\nEnter the Author Name");
+			authnameTake = scan.next().toUpperCase();
+			if (authorBook.containsKey(authnameTake)) {
+				System.out.println("\nBooks under the Author " + authnameTake);
+				for (String books : authorBook.get(authnameTake)) {
+					System.out.println(books);
+				}
+				System.out.println("\nSelect the book");
+				bookNameTake = scan.next().toUpperCase();
+
+			}
+		} else {
+			System.out.println("\nBook is not present");
+			toTakeBook(authorBook, userAuthorBook);
+		}
+
+		if (!userAuthorBook.containsKey(authnameTake)) {
+			ArrayList<String> bookListUser = new ArrayList<String>();
+			userAuthorBook.put(authnameTake, bookListUser);
+			userAuthorBook.get(authnameTake).add(bookNameTake);
+			authorBook.get(authnameTake).remove(bookNameTake);
+			System.out.println("\nBook " + bookNameTake + " author " + authnameTake + " successfully taken");
+
+		} else if (userAuthorBook.containsKey(authnameTake)) {
+			userAuthorBook.get(authnameTake).add(bookNameTake);
+			authorBook.get(authnameTake).remove(bookNameTake);
+			System.out.println("\nBook " + bookNameTake + " author " + authnameTake + " successfully taken");
+		}
+
+	}
+
+	// Return book for user
+	private static void toReturnBook(Map<String, ArrayList<String>> authorBook,
+			Map<String, ArrayList<String>> userAuthorBook) {
+
+		if (!userAuthorBook.isEmpty()) {
+			String bookNameDel = null, authnameDel = null;
+			displayAuthorBook(userAuthorBook);
+			System.out.println("\nEnter the Book Name or Author Name");
+			System.out.println("Type Book for Book Name");
+			System.out.println("Type Author for Author Name");
+
+			String toTakeInput = scan.next();
+
+			if (toTakeInput.equalsIgnoreCase("Book")) {
+				System.out.println("\nEnter the Book Name");
+				bookNameDel = scan.next().toUpperCase();
+				for (Map.Entry<String, ArrayList<String>> value : userAuthorBook.entrySet()) {
+					String author = value.getKey();
+					for (String books : value.getValue()) {
+						if (books.equalsIgnoreCase(bookNameDel)) {
+							System.out.println(author);
+						}
+					}
+				}
+				System.out.println("\nSelect Author name");
+				authnameDel = scan.next().toUpperCase();
+
+			} else if (toTakeInput.equalsIgnoreCase("Author")) {
+				System.out.println("\nEnter the Author Name");
+				authnameDel = scan.next().toUpperCase();
+				if (userAuthorBook.containsKey(authnameDel)) {
+					System.out.println("\nBooks under the Author " + authnameDel);
+					for (String books : userAuthorBook.get(authnameDel)) {
+						System.out.println(books);
+					}
+					System.out.println("\nSelect the book");
+					bookNameDel = scan.next().toUpperCase();
+
+				}
+			} else {
+				System.out.println("\nBook is not present");
+			}
+			if (!authorBook.containsKey(authnameDel)) {
+				ArrayList<String> bookListUser = new ArrayList<String>();
+				authorBook.put(authnameDel, bookListUser);
+				authorBook.get(authnameDel).add(bookNameDel);
+				userAuthorBook.get(authnameDel).remove(bookNameDel);
+				if (userAuthorBook.get(authnameDel) != null) {
+					System.out.println("\nBook " + bookNameDel + " author " + authnameDel + " succesfully returned");
+				}
+
+			} else if (authorBook.containsKey(authnameDel)) {
+				authorBook.get(authnameDel).add(bookNameDel);
+				userAuthorBook.get(authnameDel).remove(bookNameDel);
+				System.out.println("\nBook " + bookNameDel + " author " + authnameDel + " succesfully returned");
+			}
+		} else {
+			System.out.println("\nNo books to return");
+			return;
+		}
+	}
+
+//to display the author and its coresponding book list
+	private static void displayAuthorBook(Map<String, ArrayList<String>> displayBookAuthor) {
+		if (!displayBookAuthor.isEmpty()) {
+			System.out.println("\nAvailable books");
+			for (Entry<String, ArrayList<String>> eachValue : displayBookAuthor.entrySet()) {
+				String key = eachValue.getKey();
+				ArrayList<String> values = displayBookAuthor.get(key);
+				if (values != null && (!values.isEmpty())) {
+					System.out.println("The author name " + key);
+					System.out.println("Books written by " + key + " are ");
+					values.forEach(book -> System.out.println(book));
+
+				}
+			}
+		} else {
+			System.out.println("\nNo Books to display");
+		}
+	}
+
+}

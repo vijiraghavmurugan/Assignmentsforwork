@@ -1,0 +1,43 @@
+package evaluation;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+public class PatternFinding {
+
+	public static void main(String[] args) {
+//		 Scanner scan = new Scanner(System.in);
+//		 System.out.println("Enter the input");
+//		 String inputString = scan.next();
+		String inputString = "100010101101";
+		String output = "";
+
+		List<String> list = new ArrayList<String>();
+
+		for (int i = 0; i < inputString.length() - 2; i++) {
+
+			String first = Character.toString(inputString.charAt(i));
+			String second = Character.toString(inputString.charAt(i + 1));
+			String third = Character.toString(inputString.charAt(i + 2));
+
+			if ((first.equals("1") && second.equals("0") && third.equals("0"))) {
+				String str = first.concat(second).concat(third);
+				output = output.concat(str);
+			} else if (first.equals("0") && (second.equals("0")) && (third.equals("1"))) {
+				output = output.concat(second).concat(third);
+			} else if (first.equals("1") && second.equals("1") && third.equals("0")) {
+				if (!output.isEmpty()) {
+					list.add(output);
+				}
+				output = "";
+
+			}
+
+		}
+
+		System.out.println("found " + list.size() + " patterns");
+		System.out.println(list);
+	}
+
+}

@@ -1,0 +1,27 @@
+package collections;
+
+import java.util.LinkedList;
+
+public class SwapInLinkedList {
+
+	public static void main(String[] args) {
+		LinkedList<Integer> list = new LinkedList<Integer>();
+
+		list.add(12);
+		list.add(13);
+		list.add(14);
+		list.add(15);
+		list.add(16);
+		list.add(17);
+		
+		System.out.println("Before swapping "+list);
+		
+		
+		list.add(1, list.get(2));
+		list.remove(3);
+		
+		
+		System.out.println("\nAfter swapping "+list);
+	}
+
+}

@@ -1,27 +1,33 @@
 package collections;
 
 import java.util.LinkedList;
+import java.util.Scanner;
 
 public class SwapInLinkedList {
 
 	public static void main(String[] args) {
-		LinkedList<Integer> list = new LinkedList<Integer>();
+		Scanner scan = new Scanner(System.in);
 
-		list.add(12);
-		list.add(13);
-		list.add(14);
-		list.add(15);
-		list.add(16);
-		list.add(17);
-		
-		System.out.println("Before swapping "+list);
-		
-		
-		list.add(1, list.get(2));
-		list.remove(3);
-		
-		
-		System.out.println("\nAfter swapping "+list);
+		System.out.println("Enter the no of input");
+		int length = scan.nextInt();
+		LinkedList<String> listToSwap = new LinkedList<String>();
+		System.out.println("Enter the values");
+		while (length > 0) {
+			listToSwap.add(scan.next());
+			length--;
+		}
+
+		System.out.println("Enter the position to be swapped ");
+		int start = (scan.nextInt()) - 1;
+		int end = (scan.nextInt()) - 1;
+
+		scan.close();
+		System.out.println("Before swapping " + listToSwap);
+
+		listToSwap.add(start, listToSwap.get(end));
+		listToSwap.remove(end + 1);
+
+		System.out.println("\nAfter swapping " + listToSwap);
 	}
 
 }

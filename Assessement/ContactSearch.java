@@ -22,6 +22,8 @@ public class ContactSearch {
 		contact.computeIfAbsent("hijk", k -> new ArrayList<>()).add("45894875");
 		contact.computeIfAbsent(":)", k -> new ArrayList<>()).add("45894875");
 		contact.computeIfAbsent("hijk", k -> new ArrayList<>()).add(":)");
+		contact.computeIfAbsent("=+15", k -> new ArrayList<>()).add("!!!!");
+		contact.computeIfAbsent("1+2+3", k -> new ArrayList<>()).add("1234567");
 
 		System.out.println("Enter the Name or Number to search");
 

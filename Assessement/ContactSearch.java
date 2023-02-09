@@ -21,7 +21,7 @@ public class ContactSearch {
 		contact.computeIfAbsent("hijk458", k -> new ArrayList<>()).add("5943966");
 		contact.computeIfAbsent("hijk", k -> new ArrayList<>()).add("45894875");
 		contact.computeIfAbsent(":)", k -> new ArrayList<>()).add("45894875");
-		contact.computeIfAbsent("hijk", k -> new ArrayList<>()).add(":)");
+		contact.computeIfAbsent("Hijk", k -> new ArrayList<>()).add(":)");
 		contact.computeIfAbsent("=+15", k -> new ArrayList<>()).add("!!!!");
 		contact.computeIfAbsent("1+2+3", k -> new ArrayList<>()).add("1234567");
 
@@ -46,11 +46,12 @@ public class ContactSearch {
 	}
 
 	private static void displayContact(Map<String, ArrayList<String>> contact, String nameOrNum) {
+		nameOrNum = nameOrNum.toLowerCase();
 		boolean flag = false;
 		for (Entry<String, ArrayList<String>> entryValues : contact.entrySet()) {
 			String key = entryValues.getKey();
 			for (String values : contact.get(key)) {
-				if ((values.contains(nameOrNum)) || (key.contains(nameOrNum))) {
+				if ((values.toLowerCase().contains(nameOrNum)) || (key.toLowerCase().contains(nameOrNum))) {
 					flag = true;
 					System.out.print(key + " : ");
 					System.out.print(values);

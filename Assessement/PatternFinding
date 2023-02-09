@@ -7,33 +7,29 @@ import java.util.Scanner;
 public class PatternFinding {
 
 	public static void main(String[] args) {
-//		 Scanner scan = new Scanner(System.in);
-//		 System.out.println("Enter the input");
-//		 String inputString = scan.next();
-		String inputString = "100010101101";
+		Scanner scan = new Scanner(System.in);
+		System.out.println("Enter the number");
+		String inputString = scan.next();
+		scan.close();
+		
+		char[] inputArray = inputString.toCharArray();
 		String output = "";
-
 		List<String> list = new ArrayList<String>();
 
-		for (int i = 0; i < inputString.length() - 2; i++) {
+		for (int i = 0; i < inputArray.length; i++) {
 
-			String first = Character.toString(inputString.charAt(i));
-			String second = Character.toString(inputString.charAt(i + 1));
-			String third = Character.toString(inputString.charAt(i + 2));
-
-			if ((first.equals("1") && second.equals("0") && third.equals("0"))) {
-				String str = first.concat(second).concat(third);
-				output = output.concat(str);
-			} else if (first.equals("0") && (second.equals("0")) && (third.equals("1"))) {
-				output = output.concat(second).concat(third);
-			} else if (first.equals("1") && second.equals("1") && third.equals("0")) {
-				if (!output.isEmpty()) {
+			if (inputArray[i] == '1') {
+				if (output.isEmpty()) {
+					output += inputArray[i];
+				} else if (output.length() > 1) {
+					output += inputArray[i];
 					list.add(output);
+					output = "";
+					i--;
 				}
-				output = "";
-
+			} else if (inputArray[i] == '0') {
+				output += inputArray[i];
 			}
-
 		}
 
 		System.out.println("found " + list.size() + " patterns");

@@ -2,9 +2,7 @@ package evaluation;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.LinkedHashSet;
 
 public class CollectionsPrint {
 
@@ -12,19 +10,19 @@ public class CollectionsPrint {
 		int array[] = { 1, 1, 5, 5, 10, 20, 15, 10 };
 
 
-		List<Integer> arrList = new ArrayList<Integer>();
-		Set<Integer> hashSet = new HashSet<Integer>();
-		List<Integer> linkList = new LinkedList<Integer>();
+		ArrayList<Integer> arrList = new ArrayList<Integer>();
+		HashSet<Integer> hashSet = new HashSet<Integer>();
+		LinkedHashSet<Integer> linkHashSet = new LinkedHashSet<Integer>();
 
 		for (int arr : array) {
 			arrList.add(arr);
 			hashSet.add(arr);
-			linkList.add(arr);
+			linkHashSet.add(arr);
 		}
 
 		System.out.println("ArrayList " + arrList);
 		System.out.println("\nHashSet " + hashSet);
-		System.out.println("\nLinkedList " + linkList);
+		System.out.println("\nLinkedList " + linkHashSet);
 
 	}
 

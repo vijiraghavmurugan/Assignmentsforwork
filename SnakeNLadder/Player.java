@@ -41,7 +41,7 @@ public class Player {
 				}
 			}
 
-		} while (roll.equals("roll"));
+		} while (roll.equalsIgnoreCase("roll"));
 		scan.close();
 	}
 

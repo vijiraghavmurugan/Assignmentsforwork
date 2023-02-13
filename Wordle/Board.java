@@ -36,10 +36,13 @@ public class Board {
 					System.out.println("No letters were correct. Try Again!");
 				}
 
+			}else {
+				System.out.println("Enter a 5 letter word");
+				i--;
 			}
 		}
 
-		System.out.println("Attempts have been exhauseted ");
+		System.out.println("Attempts have been exhausted ");
 		System.out.println("The correct word is " + wordToBeChecked);
 	}
 }

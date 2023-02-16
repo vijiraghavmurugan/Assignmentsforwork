@@ -18,19 +18,9 @@ public class Main {
 
 	public static void main(String[] args) {
 
-		Seller sellerOne = new Seller("sellerone");
-		Seller sellerTwo = new Seller("sellertwo");
-		Seller sellerThree = new Seller("sellerthree");
-		Seller.sellerList.add(sellerOne);
-		Seller.sellerList.add(sellerTwo);
-		Seller.sellerList.add(sellerThree);
+		sellerObject.sellerData();
 
-		Buyer buyerOne = new Buyer("buyerone");
-		Buyer buyerTwo = new Buyer("buyertwo");
-		Buyer buyerThree = new Buyer("buyerthree");
-		Buyer.buyerList.add(buyerOne);
-		Buyer.buyerList.add(buyerTwo);
-		Buyer.buyerList.add(buyerThree);
+		buyerObject.buyerData();
 		logIn(flag);
 
 	}

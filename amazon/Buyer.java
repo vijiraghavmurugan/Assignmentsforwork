@@ -10,20 +10,29 @@ public class Buyer {
 
 	Cart cartDetails = new Cart();
 
-	public Buyer(String buyerName) {
-		this.setBuyerName(buyerName);
-	}
-
-	public Buyer() {
-		// TODO Auto-generated constructor stub
-	}
-
 	public String getBuyerName() {
 		return buyerName;
 	}
 
 	public void setBuyerName(String buyerName) {
 		this.buyerName = buyerName;
+	}
+
+	public Buyer() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public Buyer(String buyerName) {
+		this.setBuyerName(buyerName);
+	}
+
+	public void buyerData() {
+		Buyer buyerOne = new Buyer("buyerone");
+		Buyer buyerTwo = new Buyer("buyertwo");
+		Buyer buyerThree = new Buyer("buyerthree");
+		Buyer.buyerList.add(buyerOne);
+		Buyer.buyerList.add(buyerTwo);
+		Buyer.buyerList.add(buyerThree);
 	}
 
 	public void viewAvailableProducts() {

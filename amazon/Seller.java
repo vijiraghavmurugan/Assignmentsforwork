@@ -23,6 +23,15 @@ public class Seller {
 	public Seller(String sellerName) {
 		this.sellerName = sellerName;
 	}
+	
+	public void sellerData() {
+		Seller sellerOne = new Seller("sellerone");
+		Seller sellerTwo = new Seller("sellertwo");
+		Seller sellerThree = new Seller("sellerthree");
+		Seller.sellerList.add(sellerOne);
+		Seller.sellerList.add(sellerTwo);
+		Seller.sellerList.add(sellerThree);
+	}
 
 	public boolean addProduct(int productID, String productName, double productPrice, int availableQuantity) {
 		boolean addFlag = false;

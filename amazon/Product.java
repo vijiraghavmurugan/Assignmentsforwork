@@ -1,14 +1,9 @@
 package amazon;
 
-import java.util.HashMap;
-
 public class Product {
 	private int productID;
 	private String productName;
 	private double productPrice;
-	private int availableQuantity;
-	private String sellerName;
-	HashMap<Integer, Product> productList = new HashMap<Integer, Product>();
 
 	public int getProductID() {
 		return productID;
@@ -34,19 +29,10 @@ public class Product {
 		this.productPrice = productPrice;
 	}
 
-	public int getAvailableQuantity() {
-		return availableQuantity;
-	}
-
-	public void setAvailableQuantity(int availableQuantity) {
-		this.availableQuantity = availableQuantity;
-	}
-
-	public Product(int productID, String productName, double productPrice, int availableQuantity) {
+	public Product(int productID, String productName, double productPrice) {
 		this.productID = productID;
 		this.productName = productName;
 		this.productPrice = productPrice;
-		this.availableQuantity = availableQuantity;
 	}
 
 	public Product(int productID) {
@@ -57,12 +43,15 @@ public class Product {
 		// TODO Auto-generated constructor stub
 	}
 
-	public String getSellerName() {
-		return sellerName;
-	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null || this.getClass() != obj.getClass())
+			return false;
+		Product p1 = (Product) obj;
 
-	public void setSellerName(String sellerName) {
-		this.sellerName = sellerName;
+		return this.productID == p1.productID;
 	}
 
 }

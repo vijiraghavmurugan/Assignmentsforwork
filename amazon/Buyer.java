@@ -6,9 +6,9 @@ import java.util.Map.Entry;
 public class Buyer {
 	private String buyerName;
 	Seller sellerViewObject = new Seller();
-	static ArrayList<Buyer> buyerList = new ArrayList<Buyer>();
 
-	Cart cartDetails = new Cart();
+	ArrayList<ProductWithQuantity> cart = new ArrayList<ProductWithQuantity>();
+	ArrayList<ProductWithQuantity> boughtProducts = new ArrayList<ProductWithQuantity>();
 
 	public String getBuyerName() {
 		return buyerName;
@@ -26,86 +26,65 @@ public class Buyer {
 		this.setBuyerName(buyerName);
 	}
 
-	public void buyerData() {
-		Buyer buyerOne = new Buyer("buyerone");
-		Buyer buyerTwo = new Buyer("buyertwo");
-		Buyer buyerThree = new Buyer("buyerthree");
-		Buyer.buyerList.add(buyerOne);
-		Buyer.buyerList.add(buyerTwo);
-		Buyer.buyerList.add(buyerThree);
-	}
-
 	public void viewAvailableProducts() {
-		System.out.println("Product ID\tProduct Name\tProductPrice\tAvailable Quantity\tSeller Name");
-		for (Seller sellerObject : Seller.sellerList) {
-
-			for (Entry<Integer, Product> viewObject : sellerObject.sellerProductObject.productList.entrySet()) {
-				Product eachValue = viewObject.getValue();
-				System.out.println(eachValue.getProductID() + "\t\t" + eachValue.getProductName() + "\t\t"
-						+ eachValue.getProductPrice() + "\t\t" + eachValue.getAvailableQuantity() + "\t\t\t"
-						+ eachValue.getSellerName());
+		System.out.println("Product ID\tProduct Name\tProductPrice\tAvailable Quantity");
+		for (Seller sellerObject : Main.sellerList) {
+			for (Entry<Product, Integer> eachValue : sellerObject.sellerProductList.entrySet()) {
+				System.out.println(eachValue.getKey().getProductID() + "\t\t" + eachValue.getKey().getProductName()
+						+ "\t\t" + eachValue.getKey().getProductPrice() + "\t\t" + eachValue.getValue());
 			}
 		}
 	}
 
 	public boolean addToCart(int productID, int quantityNeeded) {
 		boolean addToCartFlag = false;
-		for (Seller sellerObject : Seller.sellerList) {
-			for (Entry<Integer, Product> productEachValue : sellerObject.sellerProductObject.productList.entrySet()) {
-				if ((productEachValue.getKey() == productID)
-						&& ((cartDetails.cartList.isEmpty()) || (!(cartDetails.cartList.containsKey(productID))))) {
-					if (productEachValue.getValue().getAvailableQuantity() >= quantityNeeded) {
-						Cart cartAdd = new Cart(productID);
-						cartAdd.setProductsInCartName(productEachValue.getValue().getProductName());
-						cartAdd.setProductsInCartPrice(productEachValue.getValue().getProductPrice());
-						cartAdd.setProductsInCartQuantity(quantityNeeded);
-						cartAdd.setTotalPriceForCart(quantityNeeded * productEachValue.getValue().getProductPrice());
-						cartDetails.cartList.put(productID, cartAdd);
-						addToCartFlag = true;
+		boolean flagForAdd = true;
 
-					} else {
-						System.out.println("Enter a Quantity lesser than or equal to "
-								+ productEachValue.getValue().getAvailableQuantity());
-						addToCartFlag = true;
+		for (ProductWithQuantity eachValue : cart) {
+			if (eachValue.getProductObjectForCart().getProductID() == productID) {
+				flagForAdd = false;
+			}
+		}
+		if (cart.isEmpty() || (flagForAdd)) {
+
+			for (Seller sellerObject : Main.sellerList) {
+				for (Entry<Product, Integer> eachProductValue : sellerObject.sellerProductList.entrySet()) {
+					if (eachProductValue.getKey().getProductID() == productID) {
+						if (eachProductValue.getValue() >= quantityNeeded) {
+							ProductWithQuantity cartAdd = new ProductWithQuantity();
+							cartAdd.setProductObjectForCart(eachProductValue.getKey());
+							cartAdd.setProductsInCartQuantity(quantityNeeded);
+							cartAdd.setTotalPriceForCart(quantityNeeded * eachProductValue.getKey().getProductPrice());
+							cart.add(cartAdd);
+							addToCartFlag = true;
+						} else {
+							System.out
+									.println("Enter a Quantity lesser than or equal to " + eachProductValue.getValue());
+							addToCartFlag = true;
+						}
 					}
-
 				}
 			}
 		}
-
 		return addToCartFlag;
-
 	}
 
 	public void viewCart() {
 		System.out.println("Product ID\tProduct Name\tProductPrice\tQuantity\tTotal");
-		for (Entry<Integer, Cart> viewProductValue : cartDetails.cartList.entrySet()) {
-			Cart eachValue = viewProductValue.getValue();
-			System.out.println(eachValue.getProductsInCartID() + "\t\t" + eachValue.getProductsInCartName() + "\t\t"
-					+ eachValue.getProductsInCartPrice() + "\t\t" + eachValue.getProductsInCartQuantity() + "\t\t"
-					+ eachValue.getTotalPriceForCart());
+		for (ProductWithQuantity viewProductValue : cart) {
+			System.out.println(viewProductValue.productObjectForCart.getProductID() + "\t\t"
+					+ viewProductValue.productObjectForCart.getProductName() + "\t\t"
+					+ viewProductValue.productObjectForCart.getProductPrice() + "\t\t"
+					+ viewProductValue.getProductsInCartQuantity() + "\t\t" + viewProductValue.getTotalPriceForCart());
 		}
 	}
 
 	public boolean buyCartItems() {
 		boolean buyFlag = false;
-		if (!cartDetails.cartList.isEmpty()) {
-			for (Seller sellerObject : Seller.sellerList) {
-				for (Entry<Integer, Cart> buyProductValue : cartDetails.cartList.entrySet()) {
-					int key = buyProductValue.getKey();
-					if (sellerObject.sellerProductObject.productList.containsKey(key)
-							&& (sellerObject.sellerProductObject.productList.get(key)
-									.getAvailableQuantity() >= buyProductValue.getValue()
-											.getProductsInCartQuantity())) {
-						cartDetails.boughtProducts.add(buyProductValue.getValue());
-						sellerObject.sellerProductObject.productList.get(key).setAvailableQuantity(
-								sellerObject.sellerProductObject.productList.get(key).getAvailableQuantity()
-										- buyProductValue.getValue().getProductsInCartQuantity());
-						buyFlag = true;
-					}
-				}
-			}
-			cartDetails.cartList.clear();
+		if (!cart.isEmpty()) {
+			boughtProducts.addAll(cart);
+			buyFlag = true;
+			cart.removeAll(boughtProducts);
 		} else {
 			System.out.println("Cart is empty");
 		}
@@ -114,29 +93,29 @@ public class Buyer {
 
 	public boolean modifyCart(int productID, int quantityNeeded) {
 		boolean modifyFlag = false;
-		modify: for (Seller sellerObject : Seller.sellerList) {
+		int index = 0;
+		Product productValueForModify = new Product(productID);
 
-			for (Entry<Integer, Product> productEachValue : sellerObject.sellerProductObject.productList.entrySet()) {
+		for (ProductWithQuantity cartValues : cart) {
+			if (cartValues.getProductObjectForCart().getProductID() != productID) {
+				System.out.println("Entered Product Id is not in the Product list");
+				return modifyFlag;
+			} else {
 
-				if ((productEachValue.getKey() == productID)
-						&& (productEachValue.getValue().getAvailableQuantity() >= quantityNeeded)) {
-
-					for (Entry<Integer, Cart> modifyProductValue : cartDetails.cartList.entrySet()) {
-
-						if (modifyProductValue.getKey() == (productID)) {
-							Cart cartModify = new Cart(productID);
-							cartModify.setProductsInCartID(productID);
-							cartModify.setProductsInCartName(modifyProductValue.getValue().getProductsInCartName());
-							cartModify.setProductsInCartPrice(modifyProductValue.getValue().getProductsInCartPrice());
-							cartModify.setProductsInCartQuantity(quantityNeeded);
-							cartModify.setTotalPriceForCart(
-									quantityNeeded * productEachValue.getValue().getProductPrice());
-							modifyFlag = cartDetails.cartList.put(productID, cartModify) != null ? true : false;
-						} else {
-							System.out.println("Enter the quantity equal to or less than "
-									+ productEachValue.getValue().getAvailableQuantity());
-							continue modify;
-						}
+				index = cart.indexOf(cartValues);
+			}
+		}
+		for (Seller sellerObject : Main.sellerList) {
+			for (Entry<Product, Integer> productEachValue : sellerObject.sellerProductList.entrySet()) {
+				if (productEachValue.getKey().equals(productValueForModify)) {
+					if (sellerObject.getAvailableQuantity() >= quantityNeeded) {
+						ProductWithQuantity cartDetails = new ProductWithQuantity();
+						cartDetails.setProductObjectForCart(productEachValue.getKey());
+						cartDetails.setProductsInCartQuantity(quantityNeeded);
+						cartDetails.setTotalPriceForCart(cartDetails.calculateTotalPrice());
+						modifyFlag = cart.set(index, cartDetails) != null ? true : false;
+					} else {
+						System.out.println("Enter the quantity less than the available quantity");
 					}
 				}
 			}
@@ -148,9 +127,10 @@ public class Buyer {
 
 	public boolean removeFromCart(int productID) {
 		boolean removeFlag = false;
-		for (Entry<Integer, Cart> removeProductValue : cartDetails.cartList.entrySet()) {
-			if (removeProductValue.getKey() == (productID)) {
-				removeFlag = cartDetails.cartList.remove(productID) != null ? true : false;
+
+		for (ProductWithQuantity orderValue : boughtProducts) {
+			if (orderValue.getProductObjectForCart().getProductID() == productID) {
+				removeFlag = cart.remove(productID) != null ? true : false;
 			}
 
 		}
@@ -159,10 +139,11 @@ public class Buyer {
 
 	public void viewInvoice() {
 		System.out.println("Product ID\tProduct Name\tProductPrice\tQuantity\tTotal");
-		for (Cart orderValue : cartDetails.boughtProducts) {
-			System.out.println(orderValue.getProductsInCartID() + "\t\t" + orderValue.getProductsInCartName() + "\t\t"
-					+ orderValue.getProductsInCartPrice() + "\t\t" + orderValue.getProductsInCartQuantity() + "\t\t"
-					+ orderValue.getTotalPriceForCart());
+		for (ProductWithQuantity orderValue : boughtProducts) {
+			System.out.println(orderValue.productObjectForCart.getProductID() + "\t\t"
+					+ orderValue.productObjectForCart.getProductName() + "\t\t"
+					+ orderValue.productObjectForCart.getProductPrice() + "\t\t"
+					+ orderValue.getProductsInCartQuantity() + "\t\t" + orderValue.getTotalPriceForCart());
 		}
 	}
 

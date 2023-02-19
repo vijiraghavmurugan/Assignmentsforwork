@@ -1,5 +1,6 @@
 package amazon;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
@@ -15,12 +16,19 @@ public class Main {
 
 	static Seller sellerObject = new Seller();
 	static Buyer buyerObject = new Buyer();
+	static ArrayList<Buyer> buyerList = new ArrayList<Buyer>();
+	static ArrayList<Seller> sellerList = new ArrayList<Seller>();
 
 	public static void main(String[] args) {
 
-		sellerObject.sellerData();
+		buyerList.add(new Buyer("buyerone"));
+		buyerList.add(new Buyer("buyertwo"));
+		buyerList.add(new Buyer("buyerthree"));
 
-		buyerObject.buyerData();
+		sellerList.add(new Seller("sellerone"));
+		sellerList.add(new Seller("sellertwo"));
+		sellerList.add(new Seller("sellerthree"));
+
 		logIn(flag);
 
 	}
@@ -35,7 +43,7 @@ public class Main {
 
 				System.out.println("Enter the Seller Name : ");
 				String sellerName = scan.next();
-				for (Seller sellerEachValue : Seller.sellerList) {
+				for (Seller sellerEachValue : Main.sellerList) {
 					if (sellerEachValue.getSellerName().equalsIgnoreCase(sellerName)) {
 						sellerAction(sellerEachValue);
 						flag = true;
@@ -44,7 +52,7 @@ public class Main {
 			} else if (sellerOrBuyer.equalsIgnoreCase("b")) {
 				System.out.println("Enter the Buyer Name : ");
 				String buyerName = scan.next().toLowerCase();
-				for (Buyer buyerEachValue : Buyer.buyerList) {
+				for (Buyer buyerEachValue : Main.buyerList) {
 					if (buyerEachValue.getBuyerName().equalsIgnoreCase(buyerName)) {
 						buyerAction(buyerEachValue);
 						flag = true;

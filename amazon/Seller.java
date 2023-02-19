@@ -1,12 +1,13 @@
 package amazon;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map.Entry;
 
 public class Seller {
 	private String sellerName;
-	Product sellerProductObject = new Product();
-	static ArrayList<Seller> sellerList = new ArrayList<Seller>();
+	private int availableQuantity;
+	Product productObjectForSeller = new Product();
+	HashMap<Product, Integer> sellerProductList = new HashMap<Product, Integer>();
 
 	public String getSellerName() {
 		return sellerName;
@@ -16,6 +17,14 @@ public class Seller {
 		this.sellerName = sellerName;
 	}
 
+	public int getAvailableQuantity() {
+		return availableQuantity;
+	}
+
+	public void setAvailableQuantity(int availableQuantity) {
+		this.availableQuantity = availableQuantity;
+	}
+
 	public Seller() {
 
 	}
@@ -23,27 +32,19 @@ public class Seller {
 	public Seller(String sellerName) {
 		this.sellerName = sellerName;
 	}
-	
-	public void sellerData() {
-		Seller sellerOne = new Seller("sellerone");
-		Seller sellerTwo = new Seller("sellertwo");
-		Seller sellerThree = new Seller("sellerthree");
-		Seller.sellerList.add(sellerOne);
-		Seller.sellerList.add(sellerTwo);
-		Seller.sellerList.add(sellerThree);
-	}
 
 	public boolean addProduct(int productID, String productName, double productPrice, int availableQuantity) {
 		boolean addFlag = false;
+		Product sellerProductAdd = new Product(productID, productName, productPrice);
+		this.availableQuantity = availableQuantity;
 
-		if (!sellerProductObject.productList.containsKey(productID)) {
-			Product sellerProductAdd = new Product(productID, productName, productPrice, availableQuantity);
-			sellerProductAdd.setSellerName(sellerName);
-			addFlag = sellerProductObject.productList.put(productID, sellerProductAdd) != null ? true : false;
+		if (!(sellerProductList.containsKey(sellerProductAdd))) {
+			addFlag = sellerProductList.put(sellerProductAdd, availableQuantity) == null ? true : false;
 		} else {
 			System.out.println("Enter unique product name");
-			addFlag = true;
+			addProduct(productID, productName, productPrice, availableQuantity);
 		}
+
 		return addFlag;
 
 	}
@@ -51,47 +52,55 @@ public class Seller {
 	public boolean removeProduct(int productID) {
 		viewProduct();
 		boolean removeFlag = false;
-		removeFlag = sellerProductObject.productList.remove(productID) != null ? true : false;
+		for (Entry<Product, Integer> eachValue : sellerProductList.entrySet()) {
+			if (eachValue.getKey().getProductID() == productID) {
+				removeFlag = sellerProductList.remove(eachValue.getKey()) != null ? true : false;
+			}
+		}
 
 		return removeFlag;
 	}
 
 	public void viewProduct() {
-		System.out.println("Product ID\tProduct Name\tProductPrice\tAvailable Quantity\tSeller Name");
-		for (Entry<Integer, Product> eachProductValue : sellerProductObject.productList.entrySet()) {
-			Product eachValue = eachProductValue.getValue();
-			System.out.println(eachValue.getProductID() + "\t\t" + eachValue.getProductName() + "\t\t"
-					+ eachValue.getProductPrice() + "\t\t" + eachValue.getAvailableQuantity() + "\t\t\t"
-					+ eachValue.getSellerName());
+		System.out.println("Product ID\tProduct Name\tProductPrice\tAvailable Quantity");
+		for (Entry<Product, Integer> eachValue : sellerProductList.entrySet()) {
+			System.out.println(eachValue.getKey().getProductID() + "\t\t" + eachValue.getKey().getProductName() + "\t\t"
+					+ eachValue.getKey().getProductPrice() + "\t\t" + eachValue.getValue());
 		}
 
 	}
 
 	public boolean modifyProduct(int productID, double productPrice, int availableQuantity) {
 		boolean modifyFlag = false;
-		for (Entry<Integer, Product> eachProductValue : sellerProductObject.productList.entrySet()) {
-			if (eachProductValue.getKey() == productID) {
-				Product productModifyAvailableQuantity = new Product(productID);
-				productModifyAvailableQuantity.setProductID(eachProductValue.getValue().getProductID());
-				productModifyAvailableQuantity.setProductName(eachProductValue.getValue().getProductName());
-				productModifyAvailableQuantity.setSellerName(eachProductValue.getValue().getSellerName());
+		boolean isValidProductName = false;
+
+		Product productValueForModify = new Product(productID);
+
+		for (Entry<Product, Integer> eachValue : sellerProductList.entrySet()) {
+			if (eachValue.getKey().equals(productValueForModify)) {
+				Product productModifyAvailablePriceQuantity = new Product(productID);
+				productModifyAvailablePriceQuantity.setProductID(eachValue.getKey().getProductID());
+				productModifyAvailablePriceQuantity.setProductName(eachValue.getKey().getProductName());
+
 				if (productPrice == 0.0) {
-					productModifyAvailableQuantity.setProductPrice(eachProductValue.getValue().getProductPrice());
-					productModifyAvailableQuantity.setAvailableQuantity(availableQuantity);
+					productModifyAvailablePriceQuantity.setProductPrice(eachValue.getKey().getProductPrice());
+					this.availableQuantity = availableQuantity;
 
 				} else if (availableQuantity == 0) {
-					productModifyAvailableQuantity.setProductPrice(productPrice);
-					productModifyAvailableQuantity
-							.setAvailableQuantity(eachProductValue.getValue().getAvailableQuantity());
-
+					productModifyAvailablePriceQuantity.setProductPrice(productPrice);
+					this.availableQuantity = eachValue.getValue();
 				}
-				modifyFlag = sellerProductObject.productList.replace(productID, productModifyAvailableQuantity) != null
+				modifyFlag = sellerProductList.put(productModifyAvailablePriceQuantity, this.availableQuantity) != null
 						? true
 						: false;
-			} else {
-				System.out.println("Enter a valid Product Name");
-				modifyFlag = true;
+				sellerProductList.remove(eachValue.getKey(), eachValue.getValue());
+				isValidProductName = true;
+
 			}
+		}
+		if (!isValidProductName) {
+			System.out.println("Enter a valid Product Name");
+			modifyProduct(productID, productPrice, availableQuantity);
 		}
 		return modifyFlag;
 
